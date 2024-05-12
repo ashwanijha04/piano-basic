@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Virtual Piano</title>
+<style>
+    .piano-key {
+        width: 60px;
+        height: 200px;
+        background-color: white;
+        border: 1px solid black;
+        display: inline-block;
+        position: relative;
+    }
+    .piano-key.black {
+        width: 40px;
+        height: 120px;
+        background-color: black;
+        position: absolute;
+        left: 45px;
+        z-index: 1;
+        margin: 0 5px;
+    }
+    .piano { position: relative; }
+    .active {
+        background-color: yellow; /* Highlight color when key is active */
+    }
+</style>
+</head>
+<body>
+<div class="piano">
+    <div class="piano-key" data-note="C1">C</div>
+    <div class="piano-key black" data-note="C2">C#</div>
+    <div class="piano-key" data-note="C3">D</div>
+    <div class="piano-key black" data-note="C4">D#</div>
+    <div class="piano-key" data-note="C5">E</div>
+    <div class="piano-key" data-note="C6">F</div>
+    <div class="piano-key black" data-note="C7">F#</div>
+    <div class="piano-key" data-note="C8">G</div>
+    <div class="piano-key black" data-note="G#">G#</div>
+    <div class="piano-key" data-note="A">A</div>
+    <div class="piano-key black" data-note="A#">A#</div>
+    <div class="piano-key" data-note="B">B</div>
+</div>
+<script>
+const keyMap = {
+    'a': 'C1', 'w': 'C2', 's': 'C3', 'e': 'C4', 'd': 'C5', 'f': 'C6', 't': 'C7', 'g': 'C8',
+    'y': 'G#', 'h': 'A', 'u': 'A#', 'j': 'B'
+};
+
+document.addEventListener('keydown', function(event) {
+    const note = keyMap[event.key];
+    if (note) {
+        playSound(note);
+        const keyElement = document.querySelector(`.piano-key[data-note="${note}"]`);
+        keyElement.classList.add('active');
+        setTimeout(() => {
+            keyElement.classList.remove('active');
+        }, 200); // Removes the highlight after 200ms
+    }
+});
+
+function playSound(note) {
+    var audio = new Audio('notes/' + note + '.mp3');
+    audio.play();
+}
+</script>
+</body>
+</html>
