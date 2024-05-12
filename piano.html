@@ -25,6 +25,17 @@
     .active {
         background-color: yellow; /* Highlight color when key is active */
     }
+    #responseBox {
+        position: fixed;
+        right: 20px;
+        top: 20px;
+        width: 300px;
+        height: auto;
+        border: 1px solid #000;
+        background-color: #f1f1f1;
+        padding: 10px;
+        overflow-y: auto;
+    }
 </style>
 </head>
 <body>
@@ -42,6 +53,8 @@
     <div class="piano-key black" data-note="A#">A#</div>
     <div class="piano-key" data-note="B">B</div>
 </div>
+<div id="responseBox">API Response:</div>
+<button onclick="fetchData()">Fetch API Data</button>
 <script>
 const keyMap = {
     'a': 'C1', 'w': 'C2', 's': 'C3', 'e': 'C4', 'd': 'C5', 'f': 'C6', 't': 'C7', 'g': 'C8',
@@ -56,7 +69,7 @@ document.addEventListener('keydown', function(event) {
         keyElement.classList.add('active');
         setTimeout(() => {
             keyElement.classList.remove('active');
-        }, 200); // Removes the highlight after 200ms
+        }, 200);
     }
 });
 
@@ -64,6 +77,53 @@ function playSound(note) {
     var audio = new Audio('notes/' + note + '.mp3');
     audio.play();
 }
+
+// function fetchData() {
+//     fetch('https://jsonplaceholder.typicode.com/todos/1') // Replace with your actual API URL
+//         .then(response => response.json())
+//         .then(data => {
+//             document.getElementById('responseBox').innerText = JSON.stringify(data, null, 2);
+//         })
+//         .catch(error => {
+//             document.getElementById('responseBox').innerText = 'Error fetching data: ' + error;
+//         });
+// }
+
+
+function fetchData() {
+    const apiKey = 'sk-proj-XXXXXXXX';  // Replace 'YOUR_API_KEY_HERE' with your actual API key
+    const url = 'https://api.openai.com/v1/chat/completions';  // Example API endpoint
+
+    fetch(url, {
+        method: 'POST',  // Assuming the API requires a POST request
+        headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            // Your request body content here if needed, like parameters for the API call
+            model: "gpt-3.5-turbo",
+            max_tokens: 60,
+            messages: [{"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Who won the cricket world cup in 1983?"},
+     
+        {"role": "user", "content": "Where was it played?"}],
+            
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('responseBox').innerText = JSON.stringify(data, null, 2);
+    })
+    .catch(error => {
+        document.getElementById('responseBox').innerText = 'Error fetching data: ' + error;
+    });
+}
+
+
+
+
+
 </script>
 </body>
 </html>
